@@ -1,9 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer' as devtools show log;
 import 'package:mynotes/constans/routes.dart';
+import '../utilites/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -67,8 +65,14 @@ class _LoginViewState extends State<LoginView> {
                 try {
                   await FirebaseAuth.instance.signInWithEmailAndPassword(
                       email: _email!.text, password: _password!.text);
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user?.emailVerified ?? false) {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                  } else {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        verifyEmailRoute, (route) => false);
+                  }
                 } on FirebaseAuthException catch (e) {
                   await ShowErrorDialog(context, 'Error: ${e.code}');
                 } catch (e) {
@@ -86,26 +90,4 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
-}
-
-Future<void> ShowErrorDialog(
-  BuildContext context,
-  String text,
-) {
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('An error occurred'),
-        content: Text(text),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Ok')),
-        ],
-      );
-    },
-  );
 }
