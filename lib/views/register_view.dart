@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mynotes/constans/routes.dart';
-
-import '../utilites/show_error_dialog.dart';
+import '../utilites/dialogs/error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -70,9 +69,9 @@ class _RegisterViewState extends State<RegisterView> {
                   await user?.sendEmailVerification();
                   Navigator.of(context).pushNamed(verifyEmailRoute);
                 } on FirebaseAuthException catch (e) {
-                  await ShowErrorDialog(context, 'Error: ${e.code}');
+                  await showErrorDialog(context, 'Error: ${e.code}');
                 } catch (e) {
-                  await ShowErrorDialog(context, e.toString());
+                  await showErrorDialog(context, e.toString());
                 }
               },
               child: const Text("REGISTER")),

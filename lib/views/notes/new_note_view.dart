@@ -6,61 +6,61 @@ class NewNoteView extends StatefulWidget {
   const NewNoteView({Key? key}) : super(key: key);
 
   @override
-  State<NewNoteView> createState() => _NewNoteViewState();
+  _NewNoteViewState createState() => _NewNoteViewState();
 }
 
 class _NewNoteViewState extends State<NewNoteView> {
   DatabaseNote? _note;
-  NotesServices? _notesServices;
-  TextEditingController? _textController;
+  late final NotesService _notesService;
+  late final TextEditingController _textController;
 
   @override
-  void initstate() {
-    _notesServices = NotesServices();
+  void initState() {
+    _notesService = NotesService();
     _textController = TextEditingController();
     super.initState();
   }
 
-  void _textControllerListner() async {
+  void _textControllerListener() async {
     final note = _note;
     if (note == null) {
       return;
     }
-    final text = _textController!.text;
-    await _notesServices!.updateNote(
+    final text = _textController.text;
+    await _notesService.updateNote(
       note: note,
       text: text,
     );
   }
 
-  void _setupTextControllerListner() async {
-    _textController!.removeListener(_textControllerListner);
-    _textController!.addListener(_textControllerListner);
+  void _setupTextControllerListener() {
+    _textController.removeListener(_textControllerListener);
+    _textController.addListener(_textControllerListener);
   }
 
-  Future<DatabaseNote?> creatNewNote() async {
-    final existinNote = _note;
-    if (existinNote != null) {
-      return existinNote;
+  Future<DatabaseNote> createNewNote() async {
+    final existingNote = _note;
+    if (existingNote != null) {
+      return existingNote;
     }
     final currentUser = FirebaseAuth.instance.currentUser!;
-    final email = currentUser.email;
-    final owner = await _notesServices!.getUser(email: email!);
-    return await _notesServices!.createNote(owner: owner);
+    final email = currentUser.email!;
+    final owner = await _notesService.getUser(email: email);
+    return await _notesService.createNote(owner: owner);
   }
 
   void _deleteNoteIfTextIsEmpty() {
     final note = _note;
-    if (_textController!.text.isEmpty && note != null) {
-      _notesServices!.deleteNote(id: note.id.toString());
+    if (_textController.text.isEmpty && note != null) {
+      _notesService.deleteNote(id: note.id);
     }
   }
 
   void _saveNoteIfTextNotEmpty() async {
     final note = _note;
-    final text = _textController!.text;
+    final text = _textController.text;
     if (note != null && text.isNotEmpty) {
-      await _notesServices!.updateNote(
+      await _notesService.updateNote(
         note: note,
         text: text,
       );
@@ -71,7 +71,7 @@ class _NewNoteViewState extends State<NewNoteView> {
   void dispose() {
     _deleteNoteIfTextIsEmpty();
     _saveNoteIfTextNotEmpty();
-    _textController!.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
@@ -82,18 +82,19 @@ class _NewNoteViewState extends State<NewNoteView> {
         title: const Text('New Note'),
       ),
       body: FutureBuilder(
-        future: creatNewNote(),
-        builder: (context, sanpshot) {
-          switch (sanpshot.connectionState) {
+        future: createNewNote(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
             case ConnectionState.done:
-              _note = sanpshot.data as DatabaseNote?;
-              _setupTextControllerListner();
+              _note = snapshot.data as DatabaseNote?;
+              _setupTextControllerListener();
               return TextField(
                 controller: _textController,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 decoration: const InputDecoration(
-                    hintText: 'Start typing ypur note ...'),
+                  hintText: 'Start typing your note...',
+                ),
               );
             default:
               return const CircularProgressIndicator();

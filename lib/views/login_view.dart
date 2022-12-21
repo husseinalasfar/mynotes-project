@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mynotes/constans/routes.dart';
-import '../utilites/show_error_dialog.dart';
+import '../utilites/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -74,9 +74,9 @@ class _LoginViewState extends State<LoginView> {
                         verifyEmailRoute, (route) => false);
                   }
                 } on FirebaseAuthException catch (e) {
-                  await ShowErrorDialog(context, 'Error: ${e.code}');
+                  await showErrorDialog(context, 'Error: ${e.code}');
                 } catch (e) {
-                  await ShowErrorDialog(context, e.toString());
+                  await showErrorDialog(context, e.toString());
                 }
               },
               child: const Text("LOGIN")),
