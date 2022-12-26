@@ -1,17 +1,18 @@
-// ignore_for_file: camel_case_types
-//login exceptions
-class userNotFoundAuthException implements Exception {}
+// login exceptions
+class UserNotFoundAuthException implements Exception {}
 
-class wrongPasswordAuthException implements Exception {}
+class WrongPasswordAuthException implements Exception {}
 
-//register exceptions
-class weakPasswordAuthException implements Exception {}
+// register exceptions
 
-class emailAlreadyInUseAuthException implements Exception {}
+class WeakPasswordAuthException implements Exception {}
 
-class invalidEmailAuthException implements Exception {}
+class EmailAlreadyInUseAuthException implements Exception {}
 
-//generic exceptions
-class genericAuthException implements Exception {}
+class InvalidEmailAuthException implements Exception {}
 
-class userNotLogedInFoundAuthException implements Exception {}
+// generic exceptions
+
+class GenericAuthException implements Exception {}
+
+class UserNotLoggedInAuthException implements Exception {}

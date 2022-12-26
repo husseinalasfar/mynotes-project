@@ -1,44 +1,44 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/constans/routes.dart';
+import 'package:mynotes/services/auth/auth_service.dart';
 
-import '../constans/routes.dart';
-
-class VerfiyEmailView extends StatefulWidget {
-  const VerfiyEmailView({Key? key}) : super(key: key);
+class VerifyEmailView extends StatefulWidget {
+  const VerifyEmailView({Key? key}) : super(key: key);
 
   @override
-  State<VerfiyEmailView> createState() => _VerfiyEmailViewState();
+  _VerifyEmailViewState createState() => _VerifyEmailViewState();
 }
 
-class _VerfiyEmailViewState extends State<VerfiyEmailView> {
+class _VerifyEmailViewState extends State<VerifyEmailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Verification Page')),
-      body: Center(
-        child: Column(
-          children: [
-            const Text(
-              "Please verify your email adreess",
-              style: TextStyle(fontSize: 25),
-            ),
-            TextButton(
-                onPressed: () async {
-                  final user = FirebaseAuth.instance.currentUser;
-                  await user?.sendEmailVerification();
-                },
-                child: const Text(
-                  'Send email varification again',
-                  style: TextStyle(fontSize: 15),
-                )),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(loginRoute, (route) => false);
-                },
-                child: const Text('Restart'))
-          ],
-        ),
+      appBar: AppBar(
+        title: const Text('Verify email'),
+      ),
+      body: Column(
+        children: [
+          const Text(
+              "We've sent you an email verification. Please open it to verify your account."),
+          const Text(
+              "If you haven't received a verification email yet, press the button below"),
+          TextButton(
+            onPressed: () async {
+              await AuthService.firebase().sendEmailVerification();
+            },
+            child: const Text('Send email verification'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await AuthService.firebase().logOut();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                registerRoute,
+                (route) => false,
+              );
+            },
+            child: const Text('Restart'),
+          )
+        ],
       ),
     );
   }
