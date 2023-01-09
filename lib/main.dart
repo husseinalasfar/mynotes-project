@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotes/constans/routes.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_event.dart';
@@ -9,24 +10,15 @@ import 'package:mynotes/views/notes/create_update_note_view.dart';
 import 'package:mynotes/views/notes/notes_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verfiy_email_view.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  runApp(
+    MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
       home: BlocProvider<AuthBloc>(
         create: (context) => AuthBloc(FirebaseAuthProvider()),
@@ -39,8 +31,8 @@ class MyApp extends StatelessWidget {
         verifyEmailRoute: (context) => const VerifyEmailView(),
         createOrUpdateNoteRoute: (context) => const CreateUpdateNoteView(),
       },
-    );
-  }
+    ),
+  );
 }
 
 class HomePage extends StatelessWidget {
@@ -59,7 +51,7 @@ class HomePage extends StatelessWidget {
           return const LoginView();
         } else {
           return const Scaffold(
-            body: CircularProgressIndicator(),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
       },
