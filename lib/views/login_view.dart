@@ -4,7 +4,6 @@ import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_event.dart';
 import 'package:mynotes/services/auth/bloc/auth_state.dart';
 import 'package:mynotes/utilites/dialogs/error_dialog.dart';
-import 'package:mynotes/utilites/dialogs/loading_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginView extends StatefulWidget {
@@ -48,50 +47,87 @@ class _LoginViewState extends State<LoginView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Login'),
+          title: const Center(child: Text('Login to see your notes')),
         ),
-        body: Column(
-          children: [
-            TextField(
-              controller: _email,
-              enableSuggestions: false,
-              autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                hintText: 'Enter your email here',
-              ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(15, 40, 15, 0),
+            child: Column(
+              children: [
+                const Text(
+                  'MyNotes',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 30),
+                TextField(
+                  controller: _email,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  autofocus: true,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    labelText: "Email",
+                    hintText: 'Enter your email here..',
+                  ),
+                ),
+                const SizedBox(height: 15),
+                TextField(
+                  controller: _password,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    labelText: "Password",
+                    hintText: 'Enter your password here',
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          const AuthEventForgotPassword(),
+                        );
+                  },
+                  child: const Text('I forgot my password'),
+                ),
+                const SizedBox(height: 40),
+                TextButton(
+                  onPressed: () async {
+                    final email = _email.text;
+                    final password = _password.text;
+                    context.read<AuthBloc>().add(
+                          AuthEventLogIn(
+                            email,
+                            password,
+                          ),
+                        );
+                  },
+                  child: Container(
+                      color: Colors.blueGrey,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(color: Colors.white, fontSize: 13.0),
+                      )),
+                ),
+                TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          const AuthEventShouldRegister(),
+                        );
+                  },
+                  child: const Text('Not registered yet? Register here!'),
+                )
+              ],
             ),
-            TextField(
-              controller: _password,
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                hintText: 'Enter your password here',
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                final email = _email.text;
-                final password = _password.text;
-                context.read<AuthBloc>().add(
-                      AuthEventLogIn(
-                        email,
-                        password,
-                      ),
-                    );
-              },
-              child: const Text('Login'),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<AuthBloc>().add(
-                      const AuthEventShouldRegister(),
-                    );
-              },
-              child: const Text('Not registered yet? Register here!'),
-            )
-          ],
+          ),
         ),
       ),
     );

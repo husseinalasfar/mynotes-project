@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mynotes/services/cloud/cloud_note.dart';
+import 'package:path/path.dart';
 
 import '../../utilites/dialogs/delete_dialog.dart';
 
@@ -28,6 +29,7 @@ class NotesListView extends StatelessWidget {
             onTap(note);
           },
           title: Text(
+            style: const TextStyle(fontFamily: 'Kalam', fontSize: 20),
             note.text,
             maxLines: 1,
             softWrap: true,

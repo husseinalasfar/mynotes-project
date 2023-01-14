@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:mynotes/firebase_options.dart';
 import 'package:mynotes/services/auth/auth_user.dart';
 import 'package:mynotes/services/auth/auth_provider.dart';
 import 'package:mynotes/services/auth/auth_exceptions.dart';
@@ -102,6 +101,24 @@ class FirebaseAuthProvider implements AuthProvider {
       await user.sendEmailVerification();
     } else {
       throw UserNotLoggedInAuthException();
+    }
+  }
+
+  @override
+  Future<void> sendPasswordReset({required String toEmail}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: toEmail);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'firebase_auth/invalid-email':
+          throw InvalidEmailAuthException();
+        case 'firebase_auth/user-not-found':
+          throw UserNotFoundAuthException();
+        default:
+          throw GenericAuthException();
+      }
+    } catch (_) {
+      throw GenericAuthException();
     }
   }
 }

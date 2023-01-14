@@ -107,12 +107,17 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               _setupTextControllerListener();
-              return TextField(
-                controller: _textController,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: 'Start typing your note...',
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: TextField(
+                  controller: _textController,
+                  autofocus: true,
+                  style: const TextStyle(fontFamily: 'Kalam'),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                      hintText: 'Start typing your note.........',
+                      hintStyle: TextStyle(fontFamily: 'Kalam')),
                 ),
               );
             default:
