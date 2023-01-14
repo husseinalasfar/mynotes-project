@@ -56,12 +56,15 @@ class _RegisterViewState extends State<RegisterView> {
             padding: const EdgeInsets.fromLTRB(15, 40, 15, 0),
             child: Column(
               children: [
+                Image.asset(
+                  'assets/images/icon.png',
+                  height: 100,
+                  width: 100,
+                ),
                 const Text(
                   'MyNotes',
                   style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500),
+                      color: Colors.black, fontSize: 20, fontFamily: 'Kalam'),
                 ),
                 const SizedBox(height: 30),
                 TextField(
